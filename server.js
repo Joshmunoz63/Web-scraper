@@ -6,6 +6,7 @@ const mongojs = require("mongojs");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const exphbs = require("express-handlebars");
+const PORT = process.env.PORT || 3000;
 
 // Initialize Express
 const app = express();
@@ -84,10 +85,10 @@ app.get("/scrape", (req, res) => {
   res.send("Scrape complete");
 });
 
-/*------------------\ 
- Listen on port 3000
-\------------------*/
-app.listen(3000, () => console.log("App running on port 3000!"));
+/*-------------\ 
+ Listen on port
+\-------------*/
+app.listen(PORT, () => { console.log(`App listening on PORT: ${PORT}`) });
 
 // Exports app to use in routes
 module.exports = app;
