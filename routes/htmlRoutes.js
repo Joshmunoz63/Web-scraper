@@ -10,7 +10,7 @@ module.exports = app => {
     // Renders index page
     app.get("/", (req, res) => {
 
-        res.render("../views/index.handlebars");
+        res.render("../views/main/index.handlebars");
       });
     // Render 404 page for any unmatched routes
   app.get("*", (req, res) => {
