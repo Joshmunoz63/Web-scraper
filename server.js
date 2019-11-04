@@ -3,10 +3,12 @@
 \-----------*/
 const express = require("express");
 const mongojs = require("mongojs");
+const mongoose = require("mongoose");
 const axios = require("axios");
 const cheerio = require("cheerio");
 const exphbs = require("express-handlebars");
 const PORT = process.env.PORT || 3000;
+const path = require('path');
 
 // Initialize Express
 const app = express();
@@ -15,11 +17,22 @@ const app = express();
 const databaseUrl = "space";
 const collections = ["scrapedData"];
 
-/*--------------------------------------------\ 
- Hook mongojs configuration to the db variable
-\--------------------------------------------*/
+/*--------------------------------------------------------------------------------------\ 
+ If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+\--------------------------------------------------------------------------------------*/
 const db = mongojs(databaseUrl, collections);
 db.on("error", error => console.log("Database Error:", error));
+
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+mongoose.connect(MONGODB_URI);
+
+/*---\
+ Path
+\---*/
+const publicDir = (path.join(__dirname, 'public'));
+
+app.use(express.static(publicDir));
 
 /*---------\
  Handlebars
@@ -67,7 +80,7 @@ app.get("/scrape", (req, res) => {
         // If this found element had both a title and a link
         if (title && link) {
           // Insert the data in the scrapedData db
-          db.scrapedData.insert({
+            db.scrapedData.insert({
             title: title,
             link: link
           },
